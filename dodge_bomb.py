@@ -1,6 +1,7 @@
 import os
 import random
 import sys
+import time
 import pygame as pg
 
 
@@ -15,6 +16,11 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 def check_bound(obj_rct:pg.Rect): #座標判定
+    """
+    引数:こうかとんRectかばくだんRect
+    戻り値：タプル（横方向判定結果，縦方向判定結果）
+    画面内ならTrue,画面外ならFalse
+    """
     yoko, tate = True, True
     if obj_rct.left < 0 or WIDTH < obj_rct.right:
         yoko = False
@@ -22,6 +28,27 @@ def check_bound(obj_rct:pg.Rect): #座標判定
         tate = False
     return yoko, tate
 
+def Gameover(screen):
+    """
+    こうかとんと爆弾が接触したときに
+    画面を暗転させてゲームオーバーであることを知らせる。
+    """
+    go_img = pg.Surface((WIDTH, HEIGHT))
+    pg.draw.rect(go_img,(0, 0, 0), (0, 0, WIDTH, HEIGHT), width=0)
+    go_rct = go_img.get_rect()
+    go_img.set_alpha(200)
+    screen.blit(go_img, go_rct) #画面を暗くする
+    fonto = pg.font.Font(None, 100)
+    txt = fonto.render("Game Over", True, (255, 255, 255))
+    screen.blit(txt,[600, 400]) #GameOverの標示
+    koka_img = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 2.0)
+    koka_rct = koka_img.get_rect()
+    koka_rct.center = 500, 450
+    screen.blit(koka_img, koka_rct) #左側のこうかとんを表示
+    koka_rct.center = 1100, 450
+    screen.blit(koka_img, koka_rct) #右側のこうかとんを表示
+    pg.display.update()
+    time.sleep(5)
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -45,6 +72,7 @@ def main():
                 return
         if kk_rct.colliderect(bd_rct): #こうかとんと爆弾が接触してゲームオーバー
             print("Game Over")
+            Gameover(screen)
             return
         
         screen.blit(bg_img, [0, 0]) 
