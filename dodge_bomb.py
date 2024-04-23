@@ -76,7 +76,7 @@ def main():
     accs, new_lst = times()
     bb_img = new_lst[0]
     bd_img = pg.Surface((20, 20))
-    #pg.draw.circle(bd_img, (255, 0, 0), (10, 10), 10)
+    pg.draw.circle(bd_img, (255, 0, 0), (10, 10), 10)
     bd_rct = bb_img.get_rect()
     bd_rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)
     vx, vy = +5, +5
